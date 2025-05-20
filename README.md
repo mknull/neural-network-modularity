@@ -1,5 +1,4 @@
-
-#  #network _science
+# Network-Science
 
 # What is this? 
 Here is a repository that examines the conceptual validity of specific centrality measures as proxies of modular behaviour. In particular, betweenness centrality and in-degree centrality is used to identify nodes that are not on the shortest path of many nodes, but that receive information from many nodes themselves, acting as information sinks. The question is whether such nodes integrate high-level information in a modular way, i.e. if removing them and their strongest incoming nodes results in a strong, class-level effect. 
