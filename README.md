@@ -1,22 +1,57 @@
+
 # Network-Science
 
-# What is this? 
-Here is a repository that examines the conceptual validity of specific centrality measures as proxies of modular behaviour. In particular, betweenness centrality and in-degree centrality is used to identify nodes that are not on the shortest path of many nodes, but that receive information from many nodes themselves, acting as information sinks. The question is whether such nodes integrate high-level information in a modular way, i.e. if removing them and their strongest incoming nodes results in a strong, class-level effect. 
-The experiment trains a neural network on a few MNIST digits, evaluates the centralities of the network, and automatically ablates them from the network. Then, class-accuracies are reported per digit. 
+## Project Overview
+
+This repository explores whether graph-theoretic centrality measures can serve as proxies for **modular processing** in neural networks.
+
+Specifically, we investigate whether neurons with **high in-degree centrality** (receiving many strong inputs) but **low betweenness centrality** (not on many shortest paths) play a special integrative role — potentially acting as **modular bottlenecks**.
+
+The core experiment:
+- Trains a neural network on a subset of MNIST digits (e.g., 3, 5, 7).
+- Constructs a directed graph of neurons and weighted connections.
+- Identifies hidden neurons with high in-degree and low betweenness.
+- Ablates each such neuron **and** its strongest incoming neurons.
+- Evaluates how this targeted ablation impacts classification performance *per digit*.
+
+---
 
 ## Installation
-#### 0. install requirements.txt.
+
+1. Install dependencies:
+```bash
 pip install -r requirements.txt
-
-#### 1. Train a neural network, e.g. with 
+```
+2. Train a neural network (example below uses 3 hidden layers of 8 units each):
+```bash
 python train.py --epochs 20 --batch-size 128 --lr 0.001 --hidden-layers 8,8,8 --save-dir ./mlp
-
-#### 2. Run network_analysis.py
+```
+3. Analyze the trained network graph:
+```bash
 python network_analysis.py
-
-#### 3. Run are_modules_indegree_nobetween.py
+```
+4. Run the ablation experiment:
+```bash
 python are_modules_indegree_nobetween.py
+```
+## Understanding the Output
 
-## Reading the output: 
-The experiment runs for multiple nodes that fit the criteria. Each detected node has their strongest incoming nodes imputed, and then the experiment reports the classification accuracies per digit. 
+The ablation experiment runs over multiple candidate neurons that match the high-in, low-betweenness profile.
 
+For each such neuron:
+
+   -The neuron and its strongest upstream inputs (based on connection weights) are zeroed out.
+
+   -The model is re-evaluated on test images.
+
+  -Accuracy is reported per digit class, helping determine if the ablated unit participated in class-specific processing.
+
+This allows you to ask:
+
+    Do these centrally located “information sinks” support modular class representations?
+
+## Notes
+
+The graph construction treats neurons as nodes and absolute weight magnitude as edge weights.
+
+Input neurons are excluded from candidate selection to avoid trivial input masking.
