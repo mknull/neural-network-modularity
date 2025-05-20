@@ -5,7 +5,7 @@
 
 This repository explores whether graph-theoretic centrality measures can serve as proxies for **modular processing** in neural networks.
 
-Specifically, we investigate whether neurons with **high in-degree centrality** (receiving many strong inputs) but **low betweenness centrality** (not on many shortest paths) play a special integrative role — potentially acting as **modular bottlenecks**.
+Specifically, we investigate whether neurons with **high in-degree centrality** (receiving many strong inputs) but **low betweenness centrality** (not on many shortest paths) play a special integrative role -potentially acting as **modular bottlenecks**.
 
 The core experiment:
 - Trains a neural network on a subset of MNIST digits (e.g., 3, 5, 7).
