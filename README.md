@@ -1,5 +1,5 @@
 
-# Network-Science
+# Neural network modularity
 
 ## Project Overview
 
@@ -55,3 +55,9 @@ This allows you to ask:
 The graph construction treats neurons as nodes and absolute weight magnitude as edge weights.
 
 Input neurons are excluded from candidate selection to avoid trivial input masking.
+
+## Citation
+
+If you use this codebase or find it helpful in your research, please cite the following repository:
+
+Panagiotou, F (2025). Neural Network Modularity [Computer software]. GitHub. https://github.com/mknull/neural-network-modularity
