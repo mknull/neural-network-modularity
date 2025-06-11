@@ -24,7 +24,7 @@ pip install -r requirements.txt
 ```
 2. Train a neural network (example below uses 3 hidden layers of 8 units each):
 ```bash
-python train.py --epochs 20 --batch-size 128 --lr 0.001 --hidden-layers 8,8,8 --save-dir ./mlp
+python train.py --epochs 30 --batch-size 128 --lr 0.001 --hidden-layers 8,8,8 --save-dir ./mlp
 ```
 3. Analyze the trained network graph:
 ```bash
