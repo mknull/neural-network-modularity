@@ -10,14 +10,13 @@ def find_high_in_low_between_neurons(model_path, top_k_in=5, top_percent_betw=0.
     model.eval()
 
     layers = [layer for layer in model.model if isinstance(layer, nn.Linear)]
-    hidden_linears = layers[:-1]
 
     all_in_deg = {}
     all_betw = {}
     node_to_layer = {}
 
     # Collect centrality metrics for hidden layers
-    for layer_idx, layer in enumerate(hidden_linears[1:], start=1):  # Start from second hidden layer
+    for layer_idx, layer in enumerate(layers[1:], start=1):  # Start from second hidden layer
         W = layer.weight.data
         G = weights_to_digraph(W)
 
