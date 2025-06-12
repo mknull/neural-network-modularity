@@ -50,6 +50,9 @@ In short, the experiment allows you to ask:
 
     Do these centrally located “information sinks” support modular class representations?
 
+## Results
+![Results of an ablation experiment](https://i.imgur.com/Gow1ezv.png)
+
 ## Notes
 
 The graph construction treats neurons as nodes and *absolute weight magnitude* as edge weights.
