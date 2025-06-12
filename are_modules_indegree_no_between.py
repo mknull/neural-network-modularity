@@ -10,6 +10,8 @@ from _reload_utils import reload_model
 from _inference_utils import find_high_in_low_between_neurons
 from _eval_utils import evaluate_per_class
 
+from viz import plot_ablation_results
+
 # Here we check whether we can detect modules in the perfect case that they are completely encapsulated, such as in
 def ablate_neuron_and_top_inputs(model, hidden_layer_idx, tgt_idx, top_n_inputs):
     """
@@ -83,6 +85,14 @@ def run_ablation_experiment(
         )
         for digit in label_map
     }
+    
+    base_model = reload_model(model_path, device=device).eval()
+    base_model_copy = deepcopy(base_model)
+    baseline_raw = evaluate_per_class(base_model_copy, batch_size=batch_size)
+    baseline = {
+        digit: baseline_raw[label_map[digit]]
+        for digit in label_map
+    }
 
     candidate_nodes_by_layer = find_high_in_low_between_neurons(
         model_path,
@@ -91,7 +101,9 @@ def run_ablation_experiment(
     )
 
     print("\n=== Individual Ablation Results ===")
-
+    
+    ablation_scores = {}
+    
     for layer_idx, candidates in candidate_nodes_by_layer:
         for tgt in sorted(candidates):
             try:
@@ -114,11 +126,19 @@ def run_ablation_experiment(
                 continue
 
             digitwise_accs = evaluate_per_class(ablated_model, batch_size=batch_size)
-
+            print('ablation_scores', ablation_scores)
+            print(digitwise_accs)
+            ablation_scores[tgt] = {
+                digit: digitwise_accs[label_map[digit]]
+                for digit in label_map
+            }
+            
             for cls, acc in digitwise_accs.items():
                 digit = [k for k, v in label_map.items() if v == cls][0]
                 # print(f"Digit {digit} (class {cls}): Accuracy after ablation = {acc:.2f}%")
-
+                
+    plot_ablation_results(ablation_scores, baseline=baseline)
+    
     print("\n=== Ablation Experiment Complete ===")
 
 if __name__ == "__main__":
