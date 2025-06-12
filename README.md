@@ -51,7 +51,12 @@ In short, the experiment allows you to ask:
     Do these centrally located “information sinks” support modular class representations?
 
 ## Results
+The figure below presents the classification accuracy following the ablation of neurons identified by their high in-degree centrality and low betweenness centrality. Each triplet of columns corresponds to a different ablation, with bars indicating accuracy for each class.
+
+The results reveal that the method successfully identifies critical output nodes for certain classes. Interestingly, even with significant ablation, the network sometimes maintains or even improves accuracy for other classes. 
+
 <img src="https://i.imgur.com/Gow1ezv.png" alt="Results of an ablation experiment" width="750"/>
+
 ## Notes
 
 The graph construction treats neurons as nodes and *absolute weight magnitude* as edge weights.
