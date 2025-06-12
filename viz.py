@@ -211,3 +211,78 @@ def visualize_all_centralities(layer_results, metrics=('in_degree', 'out_degree'
                     metric_name=metric,
                     layer_name=layer_name
                 )
+
+def plot_ablation_results(results, save_dir="plots", filename="ablation_per_digit", baseline=None):
+    """
+    Plot per-digit accuracy after ablating individual neurons.
+    Styled for publication-quality figures (e.g., Nature journal).
+
+    Args:
+        results (dict): {neuron_name: {digit: accuracy, ...}, ...}
+        save_dir (str): Directory to save plots.
+        filename (str): Base filename (no extension).
+        baseline (dict): Optional dict {digit: original_accuracy} for horizontal reference lines.
+    """
+    import os
+    os.makedirs(save_dir, exist_ok=True)
+
+    # Plot setup
+    neurons = sorted(results.keys())
+    digits = sorted(next(iter(results.values())).keys(), key=int)
+    num_digits = len(digits)
+
+    # Matplotlib style for Nature-like figures
+    plt.rcParams.update({
+        "font.family": "DejaVu Sans",
+        "font.size": 10,
+        "axes.labelsize": 11,
+        "axes.titlesize": 12,
+        "xtick.labelsize": 9,
+        "ytick.labelsize": 9,
+        "legend.fontsize": 9,
+        "lines.linewidth": 1.5,
+        "savefig.dpi": 600,
+        "figure.dpi": 150,
+    })
+
+    # Use colorblind-friendly palette (Nature style: muted but distinct)
+    palette = ['#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#e41a1c']
+    digit_colors = {digit: palette[i % len(palette)] for i, digit in enumerate(digits)}
+
+    width = 0.7 / num_digits
+    x = list(range(len(neurons)))
+
+    fig, ax = plt.subplots(figsize=(max(6, len(neurons) * 0.35), 3.5))
+
+    for i, digit in enumerate(digits):
+        bar_x = [xi + i * width for xi in x]
+        heights = [results[neuron][digit] for neuron in neurons]
+        ax.bar(bar_x, heights, width=width, label=f"Digit {digit}", color=digit_colors[digit])
+
+        if baseline and digit in baseline:
+            ax.axhline(baseline[digit], linestyle='--', linewidth=1, color=digit_colors[digit], alpha=0.6)
+
+    # Formatting
+    ax.set_xticks([xi + width * (num_digits - 1) / 2 for xi in x])
+    ax.set_xticklabels(neurons, rotation=45, ha='right')
+    ax.set_ylabel("Accuracy after Ablation")
+    ax.set_ylim(0, 1)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_linewidth(0.8)
+    ax.spines['bottom'].set_linewidth(0.8)
+    ax.yaxis.set_ticks_position('left')
+    ax.xaxis.set_ticks_position('bottom')
+    ax.grid(axis='y', linestyle='--', linewidth=0.5, alpha=0.4)
+
+    # Minimalist legend
+    ax.legend(loc='upper right', frameon=False, ncol=num_digits, handlelength=1.5)
+
+    fig.tight_layout()
+    path_base = os.path.join(save_dir, filename)
+    fig.savefig(f"{path_base}.pdf")
+    fig.savefig(f"{path_base}.png", dpi=600)
+    fig.savefig(f"{path_base}.svg")
+    plt.close(fig)
+
+    print(f"[Saved] {path_base}.pdf / .png / .svg")
