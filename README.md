@@ -24,7 +24,7 @@ pip install -r requirements.txt
 ```
 2. Train a neural network (example below uses 3 hidden layers of 8 units each):
 ```bash
-python train.py --epochs 20 --batch-size 128 --lr 0.001 --hidden-layers 8,8,8 --save-dir ./mlp
+python train.py --epochs 30 --batch-size 128 --lr 0.001 --hidden-layers 8,8,8 --save-dir ./mlp
 ```
 3. Analyze the trained network graph:
 ```bash
@@ -49,6 +49,13 @@ Specifically, for each such neuron:
 In short, the experiment allows you to ask:
 
     Do these centrally located “information sinks” support modular class representations?
+
+## Results
+The figure below presents the classification accuracy following the ablation of neurons identified by their high in-degree centrality and low betweenness centrality. Each triplet of columns corresponds to a different ablation, with bars indicating accuracy for each class.
+
+The results reveal that the method successfully identifies critical output nodes for certain classes. Interestingly, even with significant ablation, the network sometimes maintains or even improves accuracy for other classes. 
+
+<img src="https://i.imgur.com/Gow1ezv.png" alt="Results of an ablation experiment" width="750"/>
 
 ## Notes
 
