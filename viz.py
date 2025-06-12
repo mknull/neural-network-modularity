@@ -212,6 +212,7 @@ def visualize_all_centralities(layer_results, metrics=('in_degree', 'out_degree'
                     layer_name=layer_name
                 )
 
+
 def plot_ablation_results(results, save_dir="plots", filename="ablation_per_digit", baseline=None):
     """
     Plot per-digit accuracy after ablating individual neurons.
@@ -244,6 +245,7 @@ def plot_ablation_results(results, save_dir="plots", filename="ablation_per_digi
         "savefig.dpi": 600,
         "figure.dpi": 150,
     })
+    print(results)
 
     # Use colorblind-friendly palette (Nature style: muted but distinct)
     palette = ['#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#e41a1c']
@@ -259,9 +261,18 @@ def plot_ablation_results(results, save_dir="plots", filename="ablation_per_digi
         heights = [results[neuron][digit] for neuron in neurons]
         ax.bar(bar_x, heights, width=width, label=f"Digit {digit}", color=digit_colors[digit])
 
-        if baseline and digit in baseline:
-            ax.axhline(baseline[digit], linestyle='--', linewidth=1, color=digit_colors[digit], alpha=0.6)
-
+    # baselines plotted
+    if baseline:
+        for digit, color in digit_colors.items():
+            if digit in baseline:
+                ax.axhline(
+                    baseline[digit],
+                    linestyle='--',
+                    linewidth=1,
+                    color=color,
+                    alpha=0.6,
+                    label=f"Pre-ablation Accuracy (Digit {digit})"
+                )
     # Formatting
     ax.set_xticks([xi + width * (num_digits - 1) / 2 for xi in x])
     ax.set_xticklabels(neurons, rotation=45, ha='right')
@@ -274,10 +285,18 @@ def plot_ablation_results(results, save_dir="plots", filename="ablation_per_digi
     ax.yaxis.set_ticks_position('left')
     ax.xaxis.set_ticks_position('bottom')
     ax.grid(axis='y', linestyle='--', linewidth=0.5, alpha=0.4)
+    ax.set_ylim(0, 100)
 
     # Minimalist legend
-    ax.legend(loc='upper right', frameon=False, ncol=num_digits, handlelength=1.5)
-
+    ax.legend(
+    loc='upper center',
+    bbox_to_anchor=(0.5, -0.15),
+    frameon=False,
+    ncol=3,
+    handlelength=2,
+    handletextpad=0.6)
+    
+    plt.title('Ablation: High In-Degree, Low Betweenness')
     fig.tight_layout()
     path_base = os.path.join(save_dir, filename)
     fig.savefig(f"{path_base}.pdf")
@@ -286,3 +305,5 @@ def plot_ablation_results(results, save_dir="plots", filename="ablation_per_digi
     plt.close(fig)
 
     print(f"[Saved] {path_base}.pdf / .png / .svg")
+    
+    
